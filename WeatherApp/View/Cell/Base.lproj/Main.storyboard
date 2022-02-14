@@ -24,7 +24,7 @@
                                     <constraint firstAttribute="height" constant="50" id="IN3-aF-jH2"/>
                                 </constraints>
                                 <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <textInputTraits key="textInputTraits"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="string" keyPath="placeholerPadding" value="10"/>
@@ -202,14 +202,6 @@
             <point key="canvasLocation" x="18.840579710144929" y="93.75"/>
         </scene>
     </scenes>
-    <designables>
-        <designable name="AV8-ot-ltk">
-            <size key="intrinsicContentSize" width="50" height="50"/>
-        </designable>
-        <designable name="FUW-wY-EgC">
-            <size key="intrinsicContentSize" width="50" height="50"/>
-        </designable>
-    </designables>
     <resources>
         <image name="01d" width="50" height="50"/>
         <image name="xmark.app" catalog="system" width="128" height="114"/>

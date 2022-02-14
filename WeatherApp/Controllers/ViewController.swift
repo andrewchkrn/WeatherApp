@@ -72,13 +72,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         api.getWeather(form: openWeatherForm) { [self] (result) in
             switch result {
             case .success(var model):
-                print(model.current.weather)
-                self.imageView.image = UIImage(named: model.current.weather[0].icon)
-                self.dateLabel.text = Date.getTodaysDate()
-                self.weatherLabel.text = model.current.weather[0].weatherDescription.uppercased()
-                model.daily.removeFirst()
-                self.weatherData = model
-                self.collectionView.reloadData()
+                handleSuccess(model)
                 break
             case .failure(let error):
                 print(error.localizedDescription)
@@ -87,7 +81,16 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         }
     }
     
-    @objc func textFieldDidChange(_ textField: UITextField) {
+    private func handleSuccess(_ model: OpenWeather) {
+        guard let icon = model.current.weather.first?.icon else { return }
+        self.imageView.image = UIImage(named: icon)
+        self.dateLabel.text = Date.getTodaysDate()
+        self.weatherLabel.text = model.current.weather.first?.weatherDescription.uppercased()
+        self.weatherData = model
+        self.collectionView.reloadData()
+    }
+    
+    @objc private func textFieldDidChange(_ textField: UITextField) {
         tableView.frame = CGRect(x: 0, y: searchTextField.frame.maxY, width: view.frame.width, height: view.frame.height )
         tableDataSource.sourceTextHasChanged(textField.text)
         view.addSubview(tableView)

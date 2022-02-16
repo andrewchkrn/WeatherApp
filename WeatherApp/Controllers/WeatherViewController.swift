@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  WeatherViewController.swift
 //  WeatherApp
 //
 //  Created by Andrew Trach on 12.02.2022.
@@ -8,10 +8,9 @@
 
 import UIKit
 import GooglePlaces
-
 import CoreLocation
 
-class ViewController: UIViewController, CLLocationManagerDelegate {
+final class WeatherViewController: UIViewController, CLLocationManagerDelegate {
     
     @IBOutlet private weak var searchTextField: UITextField!
     @IBOutlet private weak var dateLabel: UILabel!
@@ -20,74 +19,54 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     @IBOutlet private weak var cityLabel: UILabel!
     @IBOutlet private weak var collectionView: UICollectionView!
     
+    private let viewModel = WeatherViewModel()
     private var tableView: UITableView!
     private var tableDataSource: GMSAutocompleteTableDataSource!
-    private let api: ApiServiseProtocol = ApiServise()
-    private var weatherData: OpenWeather?
-    private var locationService = LocationService(updateLocation: true)
-    private var currentlocation: CLLocation! {
-        didSet {
-            getWeather(lat: currentlocation.coordinate.latitude, lon: currentlocation.coordinate.longitude)
-        }
-    }
+    private let reuseIdentifierCell = "WeatherCell"
     
     // MARK: - Controller lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         configureAutocomplete()
-        locationManagerComplete()
-        collectionView.dataSource = self
-        collectionView.delegate = self
-        searchTextField.delegate = self
-        searchTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
+        observeSignals()
+        configureUI()
     }
     
     // MARK: - @IBAction func
     
-    @IBAction func closeSearchAction(_ sender: Any) {
-        searchTextField.text = ""
+    @IBAction private func closeSearchAction(_ sender: Any) {
+        viewModel.closeSearchAction()
         hideautocompleteTableView()
     }
     
     // MARK: - Private func
     
-    private func locationManagerComplete() {
-        locationService.getWeatherHadler = { [weak self] (coordinate) in
-            self?.currentlocation = coordinate
-            if let coordinate = coordinate?.coordinate {
-                self?.getWeather(lat: coordinate.latitude, lon: coordinate.longitude)
-            }
-        }
-        locationService.currentCityHadler = { [weak self] (place) in
-            if let place = place {
-                self?.searchTextField.text = place
-                self?.cityLabel.text = place
-            }
-        }
-    }
-    
-    private func getWeather(lat: CGFloat, lon: CGFloat) {
-        let openWeatherForm = OpenWeatherForm(lat: lat, lon: lon)
-        api.getWeather(form: openWeatherForm) { [self] (result) in
-            switch result {
-            case .success(var model):
-                handleSuccess(model)
-                break
-            case .failure(let error):
-                print(error.localizedDescription)
-                break
-            }
-        }
-    }
-    
-    private func handleSuccess(_ model: OpenWeather) {
-        guard let icon = model.current.weather.first?.icon else { return }
-        self.imageView.image = UIImage(named: icon)
+    private func configureUI() {
         self.dateLabel.text = Date.getTodaysDate()
-        self.weatherLabel.text = model.current.weather.first?.weatherDescription.uppercased()
-        self.weatherData = model
-        self.collectionView.reloadData()
+        searchTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
+    }
+    
+    private func observeSignals() {
+        viewModel.searchTextSignal = { [weak self] text in
+            self?.searchTextField.text = text
+        }
+        
+        viewModel.cityTextSignal = { [weak self] text in
+            self?.cityLabel.text = text
+        }
+        
+        viewModel.iconNameSignal = { [weak self] icon in
+            self?.imageView.image = UIImage(named: icon)
+        }
+        
+        viewModel.weatherDescriptionSignal = { [weak self] text in
+            self?.weatherLabel.text = text
+        }
+        
+        viewModel.reloadDataSignal = { [weak self] in
+            self?.collectionView.reloadData()
+        }
     }
     
     @objc private func textFieldDidChange(_ textField: UITextField) {
@@ -106,10 +85,9 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     }
 }
 
-
 // MARK: - UITextFieldDelegate
 
-extension ViewController: UITextFieldDelegate {
+extension WeatherViewController: UITextFieldDelegate {
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
         textFieldDidChange(textField)
@@ -123,25 +101,26 @@ extension ViewController: UITextFieldDelegate {
 
 // MARK: - UICollectionViewDelegate, UICollectionViewDataSource
 
-extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+extension WeatherViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "WeatherCell", for: indexPath) as! WeatherCell
-        if let item = weatherData?.daily[indexPath.row] {
-            cell.configure(item)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifierCell, for: indexPath) as! WeatherCell
+        
+        if let vm = viewModel.viewModelFor(indexPath.row) {
+            cell.configure(vm)
         }
+        
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        guard let days = weatherData?.daily.count else { return 0 }
-        return days
+        return viewModel.numberOfItems()
     }
 }
 
 // MARK: - GMSAutocompleteTableDataSourceDelegate
 
-extension ViewController: GMSAutocompleteTableDataSourceDelegate {
+extension WeatherViewController: GMSAutocompleteTableDataSourceDelegate {
     private func hideautocompleteTableView() {
         tableView.removeFromSuperview()
         view.endEditing(true)
@@ -156,11 +135,7 @@ extension ViewController: GMSAutocompleteTableDataSourceDelegate {
     }
     
     func tableDataSource(_ tableDataSource: GMSAutocompleteTableDataSource, didAutocompleteWith place: GMSPlace) {
-        let latitude = CGFloat(place.coordinate.latitude)
-        let longitude = CGFloat(place.coordinate.longitude)
-        searchTextField.text = place.name
-        cityLabel.text = place.name
-        getWeather(lat: latitude, lon: longitude)
+        viewModel.didAutocompliteWithPlace(place: place)
         hideautocompleteTableView()
         view.endEditing(true)
     }

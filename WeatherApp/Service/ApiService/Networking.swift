@@ -9,11 +9,13 @@ import Foundation
 import Alamofire
 
 // MARK: - ApiServise
+
 enum Networking {
     case getWeather(form: OpenWeatherForm)
 }
 
 // MARK: - ApiServise
+
 extension Networking: TargetType {
 
     // MARK: - Static properties

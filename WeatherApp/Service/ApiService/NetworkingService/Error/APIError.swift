@@ -9,6 +9,7 @@ import Foundation
 import Alamofire
 
 // MARK: - APIError
+
 class APIError: Error {
     
     // MARK: - Constants

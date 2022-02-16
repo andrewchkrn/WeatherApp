@@ -9,10 +9,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Weather View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="WeatherApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="WeatherViewController" customModule="WeatherApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -30,6 +30,9 @@
                                     <userDefinedRuntimeAttribute type="string" keyPath="placeholerPadding" value="10"/>
                                     <userDefinedRuntimeAttribute type="string" keyPath="layer.cornerRadius" value="16"/>
                                 </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="3yk-2L-5pa"/>
+                                </connections>
                             </textField>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MNO-xW-P1B" customClass="RightNowView" customModule="WeatherApp" customModuleProvider="target">
                                 <rect key="frame" x="24" y="142" width="366" height="300"/>
@@ -98,39 +101,9 @@
                                             <rect key="frame" x="0.0" y="0.0" width="364" height="132"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XC4-rr-cLs">
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XC4-rr-cLs" customClass="WeatherView" customModule="WeatherApp" customModuleProvider="target">
                                                     <rect key="frame" x="24" y="4" width="316" height="124"/>
-                                                    <subviews>
-                                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="jL5-HR-Vxx">
-                                                            <rect key="frame" x="24" y="0.0" width="268" height="124"/>
-                                                            <subviews>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="12:00 " textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6xo-0p-J2a">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="268" height="20.5"/>
-                                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                                    <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                    <nil key="highlightedColor"/>
-                                                                </label>
-                                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" image="01d" translatesAutoresizingMaskIntoConstraints="NO" id="AV8-ot-ltk" customClass="FancyImage" customModule="WeatherApp" customModuleProvider="target">
-                                                                    <rect key="frame" x="0.0" y="28.5" width="268" height="67"/>
-                                                                </imageView>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="30 С" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RuW-5n-BSb">
-                                                                    <rect key="frame" x="0.0" y="103.5" width="268" height="20.5"/>
-                                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                                    <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                    <nil key="highlightedColor"/>
-                                                                </label>
-                                                            </subviews>
-                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        </stackView>
-                                                    </subviews>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="bottom" secondItem="jL5-HR-Vxx" secondAttribute="bottom" id="MHi-Uo-1AW"/>
-                                                        <constraint firstItem="jL5-HR-Vxx" firstAttribute="leading" secondItem="XC4-rr-cLs" secondAttribute="leading" constant="24" id="Pc0-Dz-KMx"/>
-                                                        <constraint firstItem="jL5-HR-Vxx" firstAttribute="centerY" secondItem="XC4-rr-cLs" secondAttribute="centerY" id="WpA-zw-nMn"/>
-                                                        <constraint firstAttribute="trailing" secondItem="jL5-HR-Vxx" secondAttribute="trailing" constant="24" id="i7p-zp-7Tw"/>
-                                                        <constraint firstItem="jL5-HR-Vxx" firstAttribute="top" secondItem="XC4-rr-cLs" secondAttribute="top" id="pTY-FY-NLg"/>
-                                                    </constraints>
                                                 </view>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -144,9 +117,7 @@
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <size key="customSize" width="364" height="132"/>
                                         <connections>
-                                            <outlet property="imageView" destination="AV8-ot-ltk" id="z0o-zo-JSi"/>
-                                            <outlet property="tempLabel" destination="RuW-5n-BSb" id="aWz-c2-tSN"/>
-                                            <outlet property="timeLabel" destination="6xo-0p-J2a" id="3Ni-pO-Sei"/>
+                                            <outlet property="weatherView" destination="XC4-rr-cLs" id="2B5-Ek-YH2"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
@@ -155,6 +126,10 @@
                                         <integer key="value" value="6"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <outlet property="dataSource" destination="BYZ-38-t0r" id="V2E-VC-dqY"/>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="MYt-Sj-msn"/>
+                                </connections>
                             </collectionView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5Ry-x7-D6g">
                                 <rect key="frame" x="336" y="77.5" width="48" height="31"/>

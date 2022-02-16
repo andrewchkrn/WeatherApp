@@ -14,6 +14,8 @@ final class WeatherView: UIView {
     @IBOutlet private weak var imageView: UIImageView!
     @IBOutlet private weak var tempLabel: UILabel!
     
+    private let weatherView = "WeatherView"
+    
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -26,7 +28,7 @@ final class WeatherView: UIView {
     }
 
     private func commonInit() {
-        Bundle.main.loadNibNamed("WeatherView", owner: self, options: nil)
+        Bundle.main.loadNibNamed(weatherView, owner: self, options: nil)
         addSubview(contentView)
         contentView.frame = self.bounds
         contentView.autoresizingMask = [.flexibleHeight, .flexibleWidth]

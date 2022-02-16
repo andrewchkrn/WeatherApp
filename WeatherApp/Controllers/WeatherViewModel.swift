@@ -23,6 +23,11 @@ class WeatherViewModel {
     var weatherDescriptionSignal: ((String) -> Void)?
     var reloadDataSignal: (() -> Void)?
     
+    init() {
+        locationService.getLocation()
+        observeLocationManager()
+    }
+    
     func viewModelFor(_ index: Int) -> WeatherCellViewModel? {
         if let daily = openWeather?.daily[index] {
             let vm = WeatherCellViewModel(daily)
@@ -50,11 +55,6 @@ class WeatherViewModel {
     }
     
     // MARK: - Private func
-    
-    init() {
-        locationService.getLocation()
-        observeLocationManager()
-    }
     
     private func observeLocationManager() {
         locationService.currentLocationSignal = { [weak self] (coordinate) in

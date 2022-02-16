@@ -12,7 +12,7 @@ import GooglePlaces
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-    let googleAPIKey = "AIzaSyCKdi-XkaRQOC4bOnq-N8VSqD7plh6MLac"
+   private let googleAPIKey = "AIzaSyCKdi-XkaRQOC4bOnq-N8VSqD7plh6MLac"
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         NetworkActivityLogger.shared.startLogging()

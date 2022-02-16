@@ -11,18 +11,11 @@ import CoreLocation
 
 class LocationService: NSObject, CLLocationManagerDelegate {
     
-    var locationManager = CLLocationManager()
-    var currentLocation: CLLocation?
+    private var locationManager = CLLocationManager()
+    private var currentLocation: CLLocation?
     
-    var getWeatherHadler: ((CLLocation?) -> Void)?
-    var currentCityHadler: ((String?) -> Void)?
-    
-    init(updateLocation: Bool = true) {
-        super.init()
-        if updateLocation {
-            getLocation()
-        }
-    }
+    var currentLocationSignal: ((CLLocation?) -> Void)?
+    var currentCitySignal: ((String?) -> Void)?
     
      func getLocation() {
         if (CLLocationManager.locationServicesEnabled()) {
@@ -53,15 +46,14 @@ class LocationService: NSObject, CLLocationManagerDelegate {
                     if placemarks.count > 0 {
                         let placemark = placemarks[0]
                         if let city = placemark.locality {
-                            self.currentCityHadler?(city)
+                            self.currentCitySignal?(city)
                         }
                     }
                 }
             }
-            self.getWeatherHadler?(currentLocation)
+            self.currentLocationSignal?(currentLocation)
         }
     }
-   
     
     func stopUpdatingLocation() {
         locationManager.stopUpdatingLocation()

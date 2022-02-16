@@ -12,7 +12,6 @@ struct OpenWeather: Codable {
     let current: Current
     var daily: [Daily]
 
-
     enum CodingKeys: String, CodingKey {
         case current
         case daily
@@ -31,7 +30,6 @@ struct Current: Codable {
 }
 
 
-
 // MARK: - Weather
 struct Weather: Codable {
     let id: Int
@@ -43,15 +41,11 @@ struct Weather: Codable {
     }
 }
 
-
-
 // MARK: - Daily
 struct Daily: Codable {
- 
     let dt: Int
     let temp: Temp
     let weather: [Weather]
-   
 
     enum CodingKeys: String, CodingKey {
         case  dt, temp

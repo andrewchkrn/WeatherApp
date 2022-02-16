@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import UIKit
+import CoreGraphics
 import GooglePlaces
 
 class WeatherViewModel {
@@ -87,7 +87,7 @@ class WeatherViewModel {
         reloadDataSignal?()
         if let weather = data.current.weather.first {
             iconNameSignal?(weather.icon)
-            weatherDescriptionSignal?(weather.weatherDescription)
+            weatherDescriptionSignal?(weather.weatherDescription.uppercased())
         }
     }
 }
